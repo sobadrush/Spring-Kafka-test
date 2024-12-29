@@ -1,6 +1,8 @@
 spring:
   application:
     name: Spring-Kafka-test
+  kafka:
+    bootstrap-servers: 192.168.64.1:19092 #  FIXME: IP 可能會變動，請自行修改 (此處是 Host 上的 IP)
 
 server:
   port: 8080

@@ -1,0 +1,9 @@
+@contextPath=/roger-kafka-api
+
+### 測試 API: 生產者
+GET http://localhost:8080/{{contextPath}}/my-kafka/publish/{{$random.commerce.department}}/{{$random.idNumber.valid}}
+
+
+
+### 測試 API: 消費者
+GET http://localhost:8080/{{contextPath}}/my-kafka/getConsumerRecords
