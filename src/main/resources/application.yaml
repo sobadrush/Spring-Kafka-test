@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: Spring-Kafka-test
+
+server:
+  port: 8080
+  servlet:
+    context-path: /roger-kafka-api
+
+management: # Spring Actuator 監控(http://127.0.0.1:7001/my-actuator/health / http://127.0.0.1:7001/my-actuator/env)
+  server:
+    address: 0.0.0.0 # 允許所有來源 IP 訪問
+    port: 7001 # 訪問路徑：http://localhost:7001/my-actuator/health
+  endpoints:
+    web:
+      base-path: "/my-actuator"
+      exposure:
+        # include: "*" # 全開 (health,info,beans,conditions,env)
+        include: "health,info,env"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      access: none

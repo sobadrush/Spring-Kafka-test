@@ -1,0 +1,11 @@
+@contextPath=/roger-kafka-api
+
+### 測試 API sayHello
+GET http://localhost:8080/{{contextPath}}/hello/sayHello
+content-type: application/json
+
+
+
+### 測試 API actuator health
+GET http://localhost:7001/my-actuator/health
+content-type: application/json
