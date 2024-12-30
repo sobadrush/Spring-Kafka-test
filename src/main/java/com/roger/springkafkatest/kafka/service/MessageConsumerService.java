@@ -1,10 +1,8 @@
 package com.roger.springkafkatest.kafka.service;
 
-import com.google.gson.Gson;
 import com.roger.springkafkatest.kafka.entities.UserVO;
 import lombok.Getter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -44,13 +42,11 @@ public class MessageConsumerService {
     // 消費的記錄: Topic2
     private final List<String> consumedRecordsTopic2 = Collections.synchronizedList(new ArrayList<>());
 
-    @Autowired
-    private Gson gson;
-
-    @KafkaListener(topics = MY_TOPIC_1_ROGER, groupId = GROUP_A /* 讀取 Topic1 */)
-    public void consumer_to_Topic1(ConsumerRecord<?, ?> consumerRecord) {
+    @KafkaListener(topics = MY_TOPIC_1_ROGER, groupId = GROUP_A /* 讀取 Topic1 */, containerFactory = "kafkaConsumer_Topic1_ContainerFactory")
+    public void consumer_to_Topic1(ConsumerRecord<?, ?> consumerRecord, UserVO userVO /* 配置 kafkaConsumer_Topic1_ContainerFactory, 故可自動反序列化資料為 UserVO */) {
         this.trackConsumedPartitions("listener-consumer-topic1", consumerRecord);
-        this.consumedRecordsTopic1.add(gson.fromJson((String) consumerRecord.value(), UserVO.class));
+        System.out.println(">>> userVO = " + userVO);
+        this.consumedRecordsTopic1.add(userVO);
     }
 
     @KafkaListener(topics = MY_TOPIC_2_JUMI, groupId = GROUP_B /* 讀取 Topic2 */)

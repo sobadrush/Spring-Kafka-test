@@ -33,8 +33,9 @@ public class KafkaConsumerConfiguration {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_SERVER_URI);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_A);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        // 因為資料是 JSON 格式，所以使用 JsonDeserializer
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class); // 因為資料是 JSON 格式，所以使用 JsonDeserializer
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, UserVO.class.getName()); // 必須要寫! 是 fully-qualified class name
+        // props.put(JsonDeserializer.TRUSTED_PACKAGES, "*"); // 可不寫
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
@@ -42,7 +43,7 @@ public class KafkaConsumerConfiguration {
     public ConcurrentKafkaListenerContainerFactory<String, UserVO> kafkaConsumer_Topic1_ContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, UserVO> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(this.kafkaConsumer_Topic1_Factory());
-        factory.setConcurrency(3); // 設定併發消費者數量
+        factory.setConcurrency(3); // 消費者容器中將有3個併發的 Kafka 消費者實例在同時處理消息
         return factory;
     }
 
