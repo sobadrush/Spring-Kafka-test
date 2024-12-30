@@ -47,13 +47,13 @@ public class MessageConsumerService {
     @Autowired
     private Gson gson;
 
-    @KafkaListener(topics = MY_TOPIC_1_ROGER, groupId = GROUP_A)
+    @KafkaListener(topics = MY_TOPIC_1_ROGER, groupId = GROUP_A /* 讀取 Topic1 */)
     public void consumer_to_Topic1(ConsumerRecord<?, ?> consumerRecord) {
         this.trackConsumedPartitions("listener-consumer-topic1", consumerRecord);
         this.consumedRecordsTopic1.add(gson.fromJson((String) consumerRecord.value(), UserVO.class));
     }
 
-    @KafkaListener(topics = MY_TOPIC_2_JUMI, groupId = GROUP_B)
+    @KafkaListener(topics = MY_TOPIC_2_JUMI, groupId = GROUP_B /* 讀取 Topic2 */)
     public void consumer_to_Topic2(ConsumerRecord<?, ?> consumerRecord) {
         this.trackConsumedPartitions("listener-consumer-topic2", consumerRecord);
         // this.consumedRecords.add((UserVO) consumerRecord.value());

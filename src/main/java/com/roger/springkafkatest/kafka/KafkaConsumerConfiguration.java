@@ -24,11 +24,11 @@ public class KafkaConsumerConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String KAFKA_SERVER_URI;
 
-    public static final String GROUP_A = "consumer_group_A";
-    public static final String GROUP_B = "consumer_group_B";
+    public static final String GROUP_A = "consumer_group_A"; // 讀取 Topic1, 接收 UserVO 型別資料
+    public static final String GROUP_B = "consumer_group_B"; // 讀取 Topic2, 接收 String 型別資料
 
     @Bean
-    public ConsumerFactory<String, UserVO> kafkaConsumerFactory() {
+    public ConsumerFactory<String, UserVO> kafkaConsumer_Topic1_Factory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_SERVER_URI);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_A);
@@ -39,10 +39,27 @@ public class KafkaConsumerConfiguration {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, UserVO> kafkaConsumerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, UserVO> factory
-                                = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(this.kafkaConsumerFactory());
+    public ConcurrentKafkaListenerContainerFactory<String, UserVO> kafkaConsumer_Topic1_ContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UserVO> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(this.kafkaConsumer_Topic1_Factory());
+        factory.setConcurrency(3); // 設定併發消費者數量
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, String> kafkaConsumer_Topic2_Factory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_SERVER_URI);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_B);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(props);
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaConsumer_Topic2_ContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(this.kafkaConsumer_Topic2_Factory());
         return factory;
     }
 
