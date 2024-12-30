@@ -32,7 +32,7 @@ public class ProducerController {
         log.info("Publishing message to Kafka: dept={}, userId={}", dept, userId);
 
         CompletableFuture<SendResult<String, UserVO>> sentFuture =
-                kafkaTemplate.send(KafkaProducerConfiguration.MY_TOPIC_1, UserVO.builder().dept(dept).userId(userId).build());
+                kafkaTemplate.send(KafkaProducerConfiguration.MY_TOPIC_1_ROGER, UserVO.builder().dept(dept).userId(userId).build());
 
         // 阻塞 - 直到 Kafka 發送完成
         SendResult<String, UserVO> rs = sentFuture.get();

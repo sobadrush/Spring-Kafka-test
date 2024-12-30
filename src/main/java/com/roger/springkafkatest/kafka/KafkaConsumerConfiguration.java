@@ -2,7 +2,6 @@ package com.roger.springkafkatest.kafka;
 
 import com.roger.springkafkatest.kafka.entities.UserVO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.DoubleDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +24,17 @@ public class KafkaConsumerConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String KAFKA_SERVER_URI;
 
+    public static final String GROUP_A = "consumer_group_A";
+    public static final String GROUP_B = "consumer_group_B";
+
     @Bean
-    public ConsumerFactory<String, UserVO> kafkaConsumer() {
+    public ConsumerFactory<String, UserVO> kafkaConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_SERVER_URI);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_A);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, DoubleDeserializer.class);
+        // 因為資料是 JSON 格式，所以使用 JsonDeserializer
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
@@ -37,7 +42,7 @@ public class KafkaConsumerConfiguration {
     public ConcurrentKafkaListenerContainerFactory<String, UserVO> kafkaConsumerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, UserVO> factory
                                 = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(this.kafkaConsumer());
+        factory.setConsumerFactory(this.kafkaConsumerFactory());
         return factory;
     }
 

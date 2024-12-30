@@ -3,6 +3,8 @@ spring:
     name: Spring-Kafka-test
   kafka:
     bootstrap-servers: 192.168.64.1:19092 #  FIXME: IP 可能會變動，請自行修改 (此處是 Host 上的 IP)
+    listener:
+      missing-topics-fatal: false # true: 當 @KafkaListener 嘗試訂閱不存在的 topic 時，應用將拋出異常，而不是默默地創建一個新 topic
 
 server:
   port: 8080
