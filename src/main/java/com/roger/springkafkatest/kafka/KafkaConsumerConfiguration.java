@@ -33,8 +33,8 @@ public class KafkaConsumerConfiguration {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_SERVER_URI);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_A);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        // 因為資料是 JSON 格式，所以使用 JsonDeserializer
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class); // 因為資料是 JSON 格式，所以使用 JsonDeserializer
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, UserVO.class.getName());
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
