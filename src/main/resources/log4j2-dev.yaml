@@ -1,0 +1,57 @@
+Configuration:
+  name: Default
+  status: OFF # log4j2 框架自身的日誌級別，用來調試 log4j2 的配置文件用，上線時應切為 OFF
+  monitorInterval: 0 # 自動重新讀取配置文件的時間間隔，單位秒(預設值為0，表示不自動重新讀取)
+
+  Properties:
+    Property:
+      - name: APP_NAME
+        value: "Spring-Kafka-test"
+      - name: log-path
+        value: "logs"
+      - name: log-pattern
+        value: "【DEV】[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+
+  Appenders:
+
+    Console:
+      name: My_Console_Appender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: ${log-pattern}
+
+#    RollingFile:
+#      name: My_RollingFile_Appender
+#      fileName: "${log-path}/${APP_NAME}.log"
+#      filePattern: "${log-path}/${APP_NAME}.%d{yyyy-MM-dd HHmmss}-%i.log.gz"
+#      PatternLayout:
+#        pattern: "${log-pattern}"
+#      Policies:
+#        TimeBasedTriggeringPolicy:
+#          interval: 1
+#        SizeBasedTriggeringPolicy:
+#          size: "10MB"
+#      DefaultRolloverStrategy:
+#        max: 5
+#        Delete: # 刪除檔案配置(在每次 rolling 觸發時才會一併觸發 Delete)
+#          basePath: "${log-path}"
+#          maxDepth: 1
+#          IfFileName:
+#            glob: "${APP_NAME}.*.log.gz"
+#          IfLastModified:
+#            age: "1m" # 1分鐘前的檔案會被刪除
+
+  Loggers:
+    Root:
+      level: WARN
+      AppenderRef:
+        - ref: My_Console_Appender
+    Logger:
+      - name: com.roger.springkafkatest
+        level: INFO
+        additivity: false
+        AppenderRef:
+          - ref: My_Console_Appender
+            level: INFO
+#          - ref: My_RollingFile_Appender
+#            level: INFO

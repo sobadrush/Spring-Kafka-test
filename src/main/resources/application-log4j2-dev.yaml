@@ -1,8 +1,4 @@
 spring:
-  profiles:
-    default: default
-    active: log4j2-dev # 指定啟用的配置文件
-    # active: log4j2-prod # 指定啟用的配置文件
   application:
     name: Spring-Kafka-test
   kafka:
@@ -33,9 +29,9 @@ management: # Spring Actuator 監控(http://127.0.0.1:7001/my-actuator/health / 
 
 # Log4j2 沒辦法自行指定配置文件，故必須透過 spring profile application.yml 指定不同環境配置文件
 logging:
-  config: classpath:log4j2-default.yaml
+  config: classpath:log4j2-dev.yaml
 
 # 自訂參數
 emp:
-  name: Roger-default
-  occupation: Software Engineer-default
+  name: Roger-dev
+  occupation: Software Engineer-dev
