@@ -1,0 +1,60 @@
+<configuration>
+    <property name="LOG_FOLDER" value="${ENV_LOG_FOLDER}"/> <!-- 環境變數 -->
+    <property name="LOG_FILE_NAME" value="${ENV_LOG_FILE_NAME}"/> <!-- 環境變數 -->
+
+    <appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FOLDER}/${LOG_FILE_NAME}.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FOLDER}/${LOG_FILE_NAME}.log.%d{yyyy-MM-dd-HHmm}.%i.gz</fileNamePattern>
+            <maxFileSize>3KB</maxFileSize>
+            <maxHistory>3</maxHistory>
+            <totalSizeCap>9KB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="CONSOLE_APPENDER_DEV" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>【DEV】%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE_APPENDER_PROD" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>【PROD】%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- <root level="warn"> -->
+    <!--     <appender-ref ref="CONSOLE_APPENDER" /> -->
+    <!--     <appender-ref ref="FILE_APPENDER" /> -->
+    <!-- </root> -->
+
+    <!-- <logger name="com.roger.springkafkatest" level="info" additivity="false"> -->
+    <!--     <appender-ref ref="CONSOLE_APPENDER"/> -->
+    <!--     <appender-ref ref="FILE_APPENDER"/> -->
+    <!-- </logger> -->
+
+    <!-- 根據 Spring Profile 決定 logger 設定 -->
+    <springProfile name="dev">
+        <root level="info">
+            <appender-ref ref="CONSOLE_APPENDER_DEV" />
+        </root>
+        <logger name="com.roger.springkafkatest" level="info"/>
+    </springProfile>
+
+    <!-- 根據 Spring Profile 決定 logger 設定 -->
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="CONSOLE_APPENDER_PROD" />
+        </root>
+        <logger name="com.roger.springkafkatest" level="info"/>
+    </springProfile>
+
+</configuration>

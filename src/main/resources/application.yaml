@@ -5,6 +5,9 @@ spring:
     bootstrap-servers: 192.168.64.1:19092 #  FIXME: IP 可能會變動，請自行修改 (此處是 Host 上的 IP)
     listener:
       missing-topics-fatal: false # true: 當 @KafkaListener 嘗試訂閱不存在的 topic 時，應用將拋出異常，而不是默默地創建一個新 topic
+  profiles:
+    default: default
+    active: prod # 啟動的 profile
 
 server:
   port: 8080
@@ -27,27 +30,32 @@ management: # Spring Actuator 監控(http://127.0.0.1:7001/my-actuator/health / 
     shutdown:
       access: none
 
-LOG_FOLDER: ./mylogs
-LOG_FILE_NAME: my-logback
+# 明確指定 logback-spring.xml 的位置
+# 其實可以不用指定，預設讀取是 logback-spring.xml，logback-spring.groovy，logback.xml， 或者logback.groovy
+logging:
+  config: classpath:logback-spring.xml
+
+# LOG_FOLDER: ./mylogs
+# LOG_FILE_NAME: my-logback
 
 # 使用 springboot 內建的 logback 作為日誌框架
-logging:
-  level: # logging.level 是 map 類型, 可以指定不同包下使用不同的日誌級別
-    root: warn
-    com.roger.springkafkatest: info
-  file:
-    name: ${LOG_FOLDER}/${LOG_FILE_NAME}.log
-    # path: ${LOG_FOLDER} # 指定日誌文件的目錄, 默認文件名字 spring.log，若配置了 logging.file.name，則 logging.file.path 不生效
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-  charset:
-    file: UTF-8
-    console: UTF-8
-  logback:
-    rollingpolicy:
-      file-name-pattern: ${LOG_FOLDER}/${LOG_FILE_NAME}.log.%d{yyyy-MM-dd HHmm}-%i.gz # 當超過 max-file-size, 日誌壓縮包文件名, 有默認值，無需配置
-      max-file-size: 3KB # 日誌文件最大大小，默認為 10M, 無需配置
-      max-history: 3 # 保留最近 3 個日誌檔案(視最小時間單位)
-      total-size-cap: 9KB # 日誌文件總大小上限
-      clean-history-on-start: true # 啟動時清理歷史日誌文件
+# logging:
+#   level: # logging.level 是 map 類型, 可以指定不同包下使用不同的日誌級別
+#     root: warn
+#     com.roger.springkafkatest: info
+#   file:
+#     name: ${LOG_FOLDER}/${LOG_FILE_NAME}.log
+#     # path: ${LOG_FOLDER} # 指定日誌文件的目錄, 默認文件名字 spring.log，若配置了 logging.file.name，則 logging.file.path 不生效
+#   pattern:
+#     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+#     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+#   charset:
+#     file: UTF-8
+#     console: UTF-8
+#   logback:
+#     rollingpolicy:
+#       file-name-pattern: ${LOG_FOLDER}/${LOG_FILE_NAME}.log.%d{yyyy-MM-dd HHmm}-%i.gz # 當超過 max-file-size, 日誌壓縮包文件名, 有默認值，無需配置
+#       max-file-size: 3KB # 日誌文件最大大小，默認為 10M, 無需配置
+#       max-history: 3 # 保留最近 3 個日誌檔案(視最小時間單位)
+#       total-size-cap: 9KB # 日誌文件總大小上限
+#       clean-history-on-start: true # 啟動時清理歷史日誌文件
